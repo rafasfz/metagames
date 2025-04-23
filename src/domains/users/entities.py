@@ -2,7 +2,7 @@ from uuid import UUID
 from pydantic import BaseModel, EmailStr, Field
 from enum import Enum
 
-from src.resources.abstracts.entity import AbstractEntity
+from src.resources.abstracts.entities import AbstractEntity
 
 
 class UserRole(str, Enum):
