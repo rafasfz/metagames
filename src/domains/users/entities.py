@@ -1,5 +1,4 @@
-from uuid import UUID
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import EmailStr, Field
 from enum import Enum
 
 from src.resources.abstracts.entities import AbstractEntity
