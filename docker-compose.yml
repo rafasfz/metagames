@@ -4,7 +4,7 @@ services:
     image: postgres
     environment:
       POSTGRES_USER: metagames
-      POSTGRES_PASSWORD: admin@123
+      POSTGRES_PASSWORD: admin123
       POSTGRES_DB: metagames
     ports:
       - 5432:5432
