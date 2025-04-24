@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from pydantic import BaseModel, Field
 import bcrypt
 
-from src.domains.users.entities import UserData, UserEntity, UserWithPasswordHash
+from src.domains.users.entities import UserData, UserEntity, UserToSave
 from src.domains.users.repositories.user_repository import UserRepository
 
 
@@ -27,7 +27,7 @@ class CreateUserUseCase:
             inputs.user.password.encode("utf-8"), bcrypt.gensalt()
         ).decode("utf-8")
 
-        user_with_password_hash = UserWithPasswordHash(
+        user_with_password_hash = UserToSave(
             **inputs.user.model_dump(exclude={"password"}),
             password_hash=password_hash,
         )

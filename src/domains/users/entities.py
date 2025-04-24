@@ -1,3 +1,5 @@
+from datetime import datetime
+from uuid import UUID, uuid4
 from pydantic import BaseModel, EmailStr, Field
 from enum import Enum
 
@@ -18,8 +20,11 @@ class UserData(BaseModel):
     role: UserRole = Field(default=UserRole.USER)
 
 
-class UserWithPasswordHash(UserData):
+class UserToSave(UserData):
+    id: UUID = Field(default_factory=uuid4)
     password_hash: str = Field()
+    created_at: datetime = Field(default_factory=datetime.now)
+    updated_at: datetime = Field(default_factory=datetime.now)
 
 
 class UserEntity(UserData, AbstractEntity):

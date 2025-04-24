@@ -1,6 +1,16 @@
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI
+from src.domains.users.routes import users_router
 
 app = FastAPI()
+
+api = APIRouter(
+    prefix="/api/v1/metagames",
+    tags=["api"],
+)
+
+api.include_router(router=users_router)
+
+app.include_router(router=api)
 
 
 @app.get("/ping")

@@ -11,7 +11,7 @@ class AbstractEntity(BaseModel):
     class Config:
         validate_assignment = True
 
-    @model_validator(mode="after")
-    def number_validator(cls, values):
-        values["updated_at"] = datetime.now()
-        return values
+    # @model_validator(mode="after")
+    # def number_validator(cls, values):
+    #     values["updated_at"] = datetime.now()
+    #     return values
