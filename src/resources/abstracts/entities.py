@@ -1,6 +1,10 @@
 from datetime import datetime
+from typing import TypeVar
 from uuid import UUID, uuid4
 from pydantic import BaseModel, Field, model_validator
+from sqlalchemy.orm import DeclarativeMeta
+
+TypeEntity = TypeVar("TypeEntity", bound="AbstractEntity")
 
 
 class AbstractEntity(BaseModel):
@@ -15,3 +19,14 @@ class AbstractEntity(BaseModel):
     # def number_validator(cls, values):
     #     values["updated_at"] = datetime.now()
     #     return values
+
+
+def transform_model_to_entity(
+    model: DeclarativeMeta, entity: type[TypeEntity]
+) -> TypeEntity:
+    entity_dict = {
+        key: getattr(model, key)
+        for key in entity.model_fields.keys()
+        if hasattr(model, key)
+    }
+    return entity(**entity_dict)
