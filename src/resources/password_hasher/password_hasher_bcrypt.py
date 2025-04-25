@@ -1,9 +1,9 @@
 import bcrypt
 
-from src.resources.password_hasher.password_hasher import PasswordHasher
+from src.resources.password_hasher.password_hasher import PasswordHasherProvider
 
 
-class PasswordHasherBCrypt(PasswordHasher):
+class PasswordHasherProviderBCrypt(PasswordHasherProvider):
     def hash(self, password: str) -> str:
         return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 

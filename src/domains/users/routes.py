@@ -15,7 +15,9 @@ from src.domains.users.use_cases.get_user_by_id_use_case import (
     InputsGetUserByIdUseCase,
     OutputsGetUserByIdUseCase,
 )
-from src.resources.password_hasher.password_hasher_bcrypt import PasswordHasherBCrypt
+from src.resources.password_hasher.password_hasher_bcrypt import (
+    PasswordHasherProviderBCrypt,
+)
 
 users_router = APIRouter(
     prefix="/users",
@@ -28,7 +30,7 @@ def create_user(inputs: InputsCreateUserUseCase) -> OutputsCreateUserUseCase:
     outputs = CreateUserUseCase(
         user_repository=UserRepositoryORM(),
         user_exceptions=UserExceptionsHTTP(),
-        password_hasher=PasswordHasherBCrypt(),
+        password_hasher=PasswordHasherProviderBCrypt(),
     ).execute(inputs=inputs)
 
     return outputs

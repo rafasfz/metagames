@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from src.domains.users.entities import UserEntity, UserInputs, UserToSave
 from src.domains.users.repositories.execeptions.user_execeptions import UserExceptions
 from src.domains.users.repositories.user_repository import UserRepository
-from src.resources.password_hasher.password_hasher import PasswordHasher
+from src.resources.password_hasher.password_hasher import PasswordHasherProvider
 
 
 class InputsCreateUserUseCase(BaseModel):
@@ -19,7 +19,7 @@ class OutputsCreateUserUseCase(BaseModel):
 class CreateUserUseCase:
     user_repository: UserRepository
     user_exceptions: UserExceptions
-    password_hasher: PasswordHasher
+    password_hasher: PasswordHasherProvider
 
     def _validate(self, inputs: InputsCreateUserUseCase) -> None:
         is_user_email_already_exists = self.user_repository.get_user_by_email(
