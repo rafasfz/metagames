@@ -1,27 +1,25 @@
+from dataclasses import dataclass
 import jwt
-from datetime import timedelta
-from typing import Optional
+from src.domains.authentication.exceptions.authentication_exceptions import (
+    AuthenticationExceptions,
+)
 from src.domains.users.entities import UserEntity
 from src.resources.providers.jwt_provider.jwt_provider import JWTProvider, Payload
 from src.settings import JWT_ALGORITHM, SECRET_KEY
 
 
+@dataclass
 class PyJWTProvider(JWTProvider):
-    def generate_token(
-        self, user: UserEntity, expires_in: Optional[timedelta] = None
-    ) -> str:
-        payload = {
-            "user": user.model_dump_json(),
-            "exp": None,
-        }
+    authentication_exceptions: AuthenticationExceptions
 
-        if expires_in:
-            payload["exp"] = int(expires_in.total_seconds())
+    def generate_token(self, user: UserEntity) -> str:
+        payload = {
+            "user": user.model_dump(mode="json"),
+        }
 
         token = jwt.encode(payload, SECRET_KEY, algorithm=JWT_ALGORITHM)
         return token
 
-    # TODO: UPDATE EXCEPTION FOR INVERSION DEPENDECY WITH FASTAPI ERRORS
     def verify_token(self, token: str) -> Payload:
         try:
             return jwt.decode(
@@ -30,6 +28,6 @@ class PyJWTProvider(JWTProvider):
                 algorithms=[JWT_ALGORITHM],
             )
         except jwt.ExpiredSignatureError:
-            raise ValueError("Token expirado")
+            raise self.authentication_exceptions.invalid_token()
         except jwt.InvalidTokenError:
-            raise ValueError("Token inválido")
+            raise self.authentication_exceptions.invalid_token()

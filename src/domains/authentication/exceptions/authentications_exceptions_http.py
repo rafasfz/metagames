@@ -11,3 +11,9 @@ class AuthenticationExceptionsHTTP(AuthenticationExceptions):
             status_code=401,
             detail="Invalid credentials",
         )
+
+    def invalid_token(self):
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid token",
+        )

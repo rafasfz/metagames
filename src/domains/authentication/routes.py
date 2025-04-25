@@ -25,7 +25,9 @@ def login_user(inputs: InputsLoginUseCase) -> OutputsLoginUseCase:
     outputs = LoginUseCase(
         user_repository=UserRepositoryORM(),
         password_hasher=PasswordHasherBCrypt(),
-        jwt_provider=PyJWTProvider(),
+        jwt_provider=PyJWTProvider(
+            authentication_exceptions=AuthenticationExceptionsHTTP(),
+        ),
         authentication_exceptions=AuthenticationExceptionsHTTP(),
     ).execute(inputs=inputs)
 
