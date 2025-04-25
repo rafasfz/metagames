@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from pydantic import BaseModel, Field
-import bcrypt
 
 from src.domains.users.entities import UserData, UserEntity, UserToSave
 from src.domains.users.repositories.execeptions.user_execeptions import UserExceptions
