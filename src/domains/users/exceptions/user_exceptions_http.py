@@ -1,6 +1,6 @@
 from uuid import UUID
 from fastapi import HTTPException
-from src.domains.users.repositories.execeptions.user_execeptions import UserExceptions
+from src.domains.users.exceptions.user_exceptions import UserExceptions
 
 
 class UserExceptionsHTTP(UserExceptions):

@@ -53,3 +53,11 @@ class UserRepositoryORM(UserRepository):
         user_entity = transform_model_to_entity(user_model, UserEntity)
 
         return user_entity
+
+    def get_user_password_hash_by_username(self, username: str) -> str | None:
+        user_model = self.session.query(UserModel).filter_by(username=username).first()
+
+        if not user_model:
+            return None
+
+        return user_model.password_hash

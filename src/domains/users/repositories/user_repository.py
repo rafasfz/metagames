@@ -21,3 +21,7 @@ class UserRepository(ABC):
     @abstractmethod
     def get_user_by_id(self, id: UUID) -> UserEntity | None:
         raise NotImplementedError("Method not implemented")
+
+    @abstractmethod
+    def get_user_password_hash_by_username(self, username: str) -> str | None:
+        raise NotImplementedError("Method not implemented")

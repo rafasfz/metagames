@@ -1,7 +1,7 @@
 from uuid import UUID
 from fastapi import APIRouter, status
 
-from src.domains.users.repositories.execeptions.user_execeptions_http import (
+from src.domains.users.exceptions.user_exceptions_http import (
     UserExceptionsHTTP,
 )
 from src.domains.users.repositories.user_repository_orm import UserRepositoryORM
@@ -15,8 +15,8 @@ from src.domains.users.use_cases.get_user_by_id_use_case import (
     InputsGetUserByIdUseCase,
     OutputsGetUserByIdUseCase,
 )
-from src.resources.password_hasher.password_hasher_bcrypt import (
-    PasswordHasherProviderBCrypt,
+from src.resources.providers.password_hasher.password_hasher_bcrypt import (
+    PasswordHasherBCrypt,
 )
 
 users_router = APIRouter(
@@ -30,7 +30,7 @@ def create_user(inputs: InputsCreateUserUseCase) -> OutputsCreateUserUseCase:
     outputs = CreateUserUseCase(
         user_repository=UserRepositoryORM(),
         user_exceptions=UserExceptionsHTTP(),
-        password_hasher=PasswordHasherProviderBCrypt(),
+        password_hasher=PasswordHasherBCrypt(),
     ).execute(inputs=inputs)
 
     return outputs
