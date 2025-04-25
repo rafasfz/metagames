@@ -5,6 +5,7 @@ import bcrypt
 from src.domains.users.entities import UserData, UserEntity, UserToSave
 from src.domains.users.repositories.execeptions.user_execeptions import UserExceptions
 from src.domains.users.repositories.user_repository import UserRepository
+from src.resources.password_hasher.password_hasher import PasswordHasher
 
 
 class UserInputs(UserData):
@@ -19,15 +20,13 @@ class OutputsCreateUserUseCase(BaseModel):
     user: UserEntity = Field()
 
 
-# TODO: VALIDAR SE USUARIO JÁ EXISTE E DISPIRAR ERRO COM STATUS CODE CORRETO
-
-
 @dataclass
 class CreateUserUseCase:
     user_repository: UserRepository
     user_exceptions: UserExceptions
+    password_hasher: PasswordHasher
 
-    def execute(self, inputs: InputsCreateUserUseCase) -> OutputsCreateUserUseCase:
+    def validate(self, inputs: InputsCreateUserUseCase) -> None:
         is_user_email_already_exists = self.user_repository.get_user_by_email(
             email=inputs.user.email
         )
@@ -42,9 +41,10 @@ class CreateUserUseCase:
         if is_username_already_exists:
             raise self.user_exceptions.user_already_exists(field="username")
 
-        password_hash = bcrypt.hashpw(
-            inputs.user.password.encode("utf-8"), bcrypt.gensalt()
-        ).decode("utf-8")
+    def execute(self, inputs: InputsCreateUserUseCase) -> OutputsCreateUserUseCase:
+        self.validate(inputs)
+
+        password_hash = self.password_hasher.hash(inputs.user.password)
 
         user_with_password_hash = UserToSave(
             **inputs.user.model_dump(exclude={"password"}),

@@ -7,4 +7,8 @@
     cp .env.example .env
     alembic upgrade head
     fastapi dev src/main.py
-```
+``` 
+
+TODO
+AUTENTICAÇÃO
+DOCKERFILE
