@@ -43,3 +43,13 @@ class UserRepositoryORM(UserRepository):
         user_entity = transform_model_to_entity(user_model, UserEntity)
 
         return user_entity
+
+    def get_user_by_id(self, id: str) -> UserEntity | None:
+        user_model = self.session.query(UserModel).filter_by(id=id).first()
+
+        if not user_model:
+            return None
+
+        user_entity = transform_model_to_entity(user_model, UserEntity)
+
+        return user_entity
