@@ -1,14 +1,10 @@
 from dataclasses import dataclass
 from pydantic import BaseModel, Field
 
-from src.domains.users.entities import UserData, UserEntity, UserToSave
+from src.domains.users.entities import UserData, UserEntity, UserInputs, UserToSave
 from src.domains.users.repositories.execeptions.user_execeptions import UserExceptions
 from src.domains.users.repositories.user_repository import UserRepository
 from src.resources.password_hasher.password_hasher import PasswordHasher
-
-
-class UserInputs(UserData):
-    password: str = Field(min_length=8, max_length=128)
 
 
 class InputsCreateUserUseCase(BaseModel):

@@ -20,6 +20,10 @@ class UserData(BaseModel):
     role: UserRole = Field(default=UserRole.USER)
 
 
+class UserInputs(UserData):
+    password: str = Field(min_length=8, max_length=128)
+
+
 class UserToSave(UserData):
     id: UUID = Field(default_factory=uuid4)
     password_hash: str = Field()
