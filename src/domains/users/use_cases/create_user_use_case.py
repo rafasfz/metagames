@@ -21,7 +21,7 @@ class CreateUserUseCase:
     user_exceptions: UserExceptions
     password_hasher: PasswordHasher
 
-    def validate(self, inputs: InputsCreateUserUseCase) -> None:
+    def _validate(self, inputs: InputsCreateUserUseCase) -> None:
         is_user_email_already_exists = self.user_repository.get_user_by_email(
             email=inputs.user.email
         )
@@ -37,7 +37,7 @@ class CreateUserUseCase:
             raise self.user_exceptions.user_already_exists(field="username")
 
     def execute(self, inputs: InputsCreateUserUseCase) -> OutputsCreateUserUseCase:
-        self.validate(inputs)
+        self._validate(inputs)
 
         password_hash = self.password_hasher.hash(inputs.user.password)
 
