@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 
 from src.infrastructure.db import Base
 from src.domains.users.models import *
+from src.domains.games.models import *
 
 load_dotenv()
 
