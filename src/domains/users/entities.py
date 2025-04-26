@@ -32,4 +32,10 @@ class UserToSave(UserData):
 
 
 class UserEntity(UserData, AbstractEntity):
+    def is_admin(self) -> bool:
+        return self.role == UserRole.ADMIN
+
+    def is_company(self) -> bool:
+        return self.role == UserRole.COMPANY
+
     pass

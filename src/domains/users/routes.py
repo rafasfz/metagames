@@ -1,6 +1,9 @@
+from typing import Annotated
 from uuid import UUID
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Depends, status
 
+from src.domains.authentication.routes import get_user_if_authenticated
+from src.domains.users.entities import UserEntity
 from src.domains.users.exceptions.user_exceptions_http import (
     UserExceptionsHTTP,
 )
@@ -25,7 +28,10 @@ users_router = APIRouter(
 
 
 @users_router.post("/", status_code=status.HTTP_201_CREATED)
-def create_user(inputs: InputsCreateUserUseCase) -> OutputsCreateUserUseCase:
+def create_user(
+    inputs: InputsCreateUserUseCase,
+    user: Annotated[UserEntity | None, Depends(get_user_if_authenticated)],
+) -> OutputsCreateUserUseCase:
 
     outputs = CreateUserUseCase(
         user_repository=UserRepositoryORM(),

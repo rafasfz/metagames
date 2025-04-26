@@ -1,8 +1,5 @@
 from dataclasses import dataclass
 import jwt
-from src.domains.authentication.exceptions.authentication_exceptions import (
-    AuthenticationExceptions,
-)
 from src.domains.users.entities import UserEntity
 from src.resources.providers.jwt_provider.jwt_provider import JWTProvider, Payload
 from src.settings import JWT_ALGORITHM, SECRET_KEY
@@ -10,7 +7,6 @@ from src.settings import JWT_ALGORITHM, SECRET_KEY
 
 @dataclass
 class PyJWTProvider(JWTProvider):
-    authentication_exceptions: AuthenticationExceptions
 
     def generate_token(self, user: UserEntity) -> str:
         payload = {
@@ -20,7 +16,7 @@ class PyJWTProvider(JWTProvider):
         token = jwt.encode(payload, SECRET_KEY, algorithm=JWT_ALGORITHM)
         return token
 
-    def verify_token(self, token: str) -> Payload:
+    def verify_token(self, token: str) -> Payload | None:
         try:
             return jwt.decode(
                 token,
@@ -28,6 +24,6 @@ class PyJWTProvider(JWTProvider):
                 algorithms=[JWT_ALGORITHM],
             )
         except jwt.ExpiredSignatureError:
-            raise self.authentication_exceptions.invalid_token()
+            return None
         except jwt.InvalidTokenError:
-            raise self.authentication_exceptions.invalid_token()
+            return None
