@@ -10,4 +10,6 @@ class AbstractModel(Base):
 
     id: Mapped[UUID] = mapped_column(UUID, primary_key=True, index=True)
     created_at: Mapped[datetime] = mapped_column("created_at", nullable=False)
-    updated_at: Mapped[datetime] = mapped_column("updated_at", nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        "updated_at", nullable=False, onupdate=datetime.now
+    )
