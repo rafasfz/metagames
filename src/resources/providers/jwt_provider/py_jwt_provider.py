@@ -18,10 +18,12 @@ class PyJWTProvider(JWTProvider):
 
     def verify_token(self, token: str) -> Payload | None:
         try:
-            return jwt.decode(
-                token,
-                SECRET_KEY,
-                algorithms=[JWT_ALGORITHM],
+            return Payload(
+                **jwt.decode(
+                    token,
+                    SECRET_KEY,
+                    algorithms=[JWT_ALGORITHM],
+                )
             )
         except jwt.ExpiredSignatureError:
             return None

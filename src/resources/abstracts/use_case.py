@@ -13,7 +13,7 @@ OutputsUseCase = TypeVar("OutputsUseCase")
 
 
 @dataclass
-class UseCaseAbstract(Generic[InputsUseCase, OutputsUseCase]):
+class AbstractUseCase(Generic[InputsUseCase, OutputsUseCase]):
     exceptions_provider: ExceptionsProvider
 
     user: UserEntity | None = None

@@ -18,6 +18,9 @@ from src.domains.users.use_cases.get_user_by_id_use_case import (
     InputsGetUserByIdUseCase,
     OutputsGetUserByIdUseCase,
 )
+from src.resources.providers.exceptions_provider.exceptions_provider_http import (
+    ExceptionsProviderHTTP,
+)
 from src.resources.providers.password_hasher.password_hasher_bcrypt import (
     PasswordHasherBCrypt,
 )
@@ -34,9 +37,10 @@ def create_user(
 ) -> OutputsCreateUserUseCase:
 
     outputs = CreateUserUseCase(
+        user=user,
         user_repository=UserRepositoryORM(),
-        user_exceptions=UserExceptionsHTTP(),
         password_hasher=PasswordHasherBCrypt(),
+        exceptions_provider=ExceptionsProviderHTTP(),
     ).execute(inputs=inputs)
 
     return outputs
@@ -46,7 +50,8 @@ def create_user(
 def get_user_by_id(id: UUID) -> OutputsGetUserByIdUseCase:
 
     outputs = GetUserByIdUseCase(
-        user_repository=UserRepositoryORM(), user_exceptions=UserExceptionsHTTP()
+        user_repository=UserRepositoryORM(),
+        exceptions_provider=ExceptionsProviderHTTP(),
     ).execute(inputs=InputsGetUserByIdUseCase(id=id))
 
     return outputs
