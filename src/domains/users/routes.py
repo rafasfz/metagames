@@ -1,9 +1,7 @@
 from typing import Annotated
 from uuid import UUID
 from fastapi import APIRouter, Depends, status
-from sqlalchemy.orm import Session
 
-from src.infrastructure.db import engine
 from src.domains.authentication.routes import get_user_if_authenticated
 from src.domains.users.entities import UserEntity
 from src.domains.users.repositories.user_repository_orm import UserRepositoryORM
