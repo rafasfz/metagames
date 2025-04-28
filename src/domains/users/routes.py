@@ -52,9 +52,7 @@ def create_user(
 def get_user_by_id(id: UUID) -> OutputsGetUserByIdUseCase:
 
     outputs = GetUserByIdUseCase(
-        user_repository=UserRepositoryORM(
-            session=Session(engine),
-        ),
+        repositories_provider=RepositoriesProviderORM(),
         exceptions_provider=ExceptionsProviderHTTP(),
     ).execute(inputs=InputsGetUserByIdUseCase(id=id))
 

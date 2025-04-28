@@ -5,6 +5,9 @@ from pydantic import BaseModel, Field
 from src.domains.users.entities import UserEntity
 from src.domains.users.repositories.user_repository import UserRepository
 from src.resources.abstracts.use_case import AbstractUseCase
+from src.resources.providers.repositories_provider.repositories_provider import (
+    RepositoriesProvider,
+)
 
 
 class InputsGetUserByIdUseCase(BaseModel):
@@ -19,10 +22,10 @@ class OutputsGetUserByIdUseCase(BaseModel):
 class GetUserByIdUseCase(
     AbstractUseCase[InputsGetUserByIdUseCase, OutputsGetUserByIdUseCase]
 ):
-    user_repository: UserRepository
+    repositories_provider: RepositoriesProvider
 
     def _execute(self, inputs: InputsGetUserByIdUseCase) -> OutputsGetUserByIdUseCase:
-        user = self.user_repository.get_user_by_id(id=inputs.id)
+        user = self.repositories_provider.user_repository.get_user_by_id(id=inputs.id)
 
         if not user:
             raise self.exceptions_provider.user_exceptions.user_not_found(id=inputs.id)

@@ -18,52 +18,20 @@ from src.resources.providers.repositories_provider.repositories_provider_orm imp
 
 
 @pytest.fixture
-def user_inputs() -> UserInputs:
-    return UserInputs(
-        email="john@doe.com",
-        username="jonhndoe",
-        password="password123",
-        first_name="John",
-        last_name="Doe",
-    )
-
-
-@pytest.fixture
-def user_common() -> UserEntity:
-    return UserEntity(
-        email="user@common.com",
-        username="user_common",
-        first_name="User",
-        last_name="Common",
-        role=UserRole.USER,
-    )
-
-
-@pytest.fixture
-def user_admin() -> UserEntity:
-    return UserEntity(
-        email="user@admin.com",
-        username="user_admin",
-        first_name="User",
-        last_name="Admin",
-        role=UserRole.ADMIN,
-    )
-
-
-@pytest.fixture
 def create_user(
     repositories_provider_orm: RepositoriesProviderORM,
-) -> Callable[[UserInputs], None]:
-    def _create_user(user: UserInputs):
+) -> Callable[[UserInputs], UserEntity]:
+    def _create_user(user: UserInputs) -> UserEntity:
         inputs = InputsCreateUserUseCase(
             user=user,
         )
 
-        CreateUserUseCase(
+        outputs = CreateUserUseCase(
             repositories_provider=repositories_provider_orm,
             password_hasher=PasswordHasherBCrypt(),
             exceptions_provider=ExceptionsProviderHTTP(),
         ).execute(inputs=inputs)
+        return outputs.user
 
     return _create_user
 
@@ -95,7 +63,7 @@ def test_create_user_use_case(
     assert created_user.last_name == user_inputs.last_name
 
 
-def test_create_user_use_case_with_existing_email(
+def test_error_create_user_use_case_with_existing_email(
     user_inputs: UserInputs,
     repositories_provider_orm: RepositoriesProviderORM,
     create_user: Callable[[UserInputs], None],
@@ -117,7 +85,7 @@ def test_create_user_use_case_with_existing_email(
     assert http_exception.value.status_code == 400
 
 
-def test_create_user_use_case_with_existing_username(
+def test_error_create_user_use_case_with_existing_username(
     user_inputs: UserInputs,
     repositories_provider_orm: RepositoriesProviderORM,
     create_user: Callable[[UserInputs], None],
