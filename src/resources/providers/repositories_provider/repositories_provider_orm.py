@@ -1,6 +1,7 @@
 from dataclasses import dataclass
+from sqlalchemy.orm import Session
 
-from src.domains.users.repositories.user_repository import UserRepository
+from src.infrastructure.db import engine
 from src.domains.users.repositories.user_repository_orm import UserRepositoryORM
 from src.resources.providers.repositories_provider.repositories_provider import (
     RepositoriesProvider,
@@ -9,4 +10,4 @@ from src.resources.providers.repositories_provider.repositories_provider import 
 
 @dataclass
 class RepositoriesProviderORM(RepositoriesProvider):
-    user_respository: UserRepositoryORM
+    user_repository: UserRepositoryORM = UserRepositoryORM(Session(engine))

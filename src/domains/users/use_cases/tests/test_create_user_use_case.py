@@ -1,30 +1,21 @@
-from typing import Generator
-import pytest
-from sqlalchemy.orm import Session
-from sqlalchemy.engine import Engine
-from pytest_alembic.runner import MigrationContext
 
 from src.domains.users.entities import UserInputs
-from src.domains.users.repositories.user_repository_orm import UserRepositoryORM
 from src.domains.users.use_cases.create_user_use_case import (
     CreateUserUseCase,
     InputsCreateUserUseCase,
 )
-from src.infrastructure.db import Base
 from src.resources.providers.exceptions_provider.exceptions_provider_http import (
     ExceptionsProviderHTTP,
 )
 from src.resources.providers.password_hasher.password_hasher_bcrypt import (
     PasswordHasherBCrypt,
 )
-from src.resources.providers.repositories_provider.repositories_provider_http import (
+from src.resources.providers.repositories_provider.repositories_provider_orm import (
     RepositoriesProviderORM,
 )
 
 
-def test_create_user_use_case(
-    engine: Engine, repositories_provider_orm: RepositoriesProviderORM
-):
+def test_create_user_use_case(repositories_provider_orm: RepositoriesProviderORM):
     user_inputs = UserInputs(
         email="john@doe.com",
         username="jonhndoe",
@@ -38,12 +29,12 @@ def test_create_user_use_case(
     )
 
     outputs = CreateUserUseCase(
-        user_repository=UserRepositoryORM(session=Session(engine)),
+        repositories_provider=repositories_provider_orm,
         password_hasher=PasswordHasherBCrypt(),
         exceptions_provider=ExceptionsProviderHTTP(),
     ).execute(inputs=inputs)
 
-    created_user = repositories_provider_orm.user_respository.get_user_by_id(
+    created_user = repositories_provider_orm.user_repository.get_user_by_id(
         id=outputs.user.id,
     )
 

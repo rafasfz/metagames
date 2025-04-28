@@ -4,7 +4,7 @@ from sqlalchemy import Engine
 
 from src.domains.users.repositories.user_repository_orm import UserRepositoryORM
 from src.infrastructure.db import Base
-from src.resources.providers.repositories_provider.repositories_provider_http import (
+from src.resources.providers.repositories_provider.repositories_provider_orm import (
     RepositoriesProviderORM,
 )
 from sqlalchemy.orm import Session
@@ -22,5 +22,5 @@ def engine(alembic_engine: Engine) -> Generator[Engine, None, None]:
 @pytest.fixture
 def repositories_provider_orm(engine) -> RepositoriesProviderORM:
     return RepositoriesProviderORM(
-        user_respository=UserRepositoryORM(session=Session(engine)),
+        user_repository=UserRepositoryORM(session=Session(engine)),
     )

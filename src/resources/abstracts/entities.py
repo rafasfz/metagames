@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import TypeVar
 from uuid import UUID, uuid4
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
 from sqlalchemy.orm import DeclarativeMeta
 
 TypeEntity = TypeVar("TypeEntity", bound="AbstractEntity")

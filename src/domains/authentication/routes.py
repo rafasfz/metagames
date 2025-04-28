@@ -2,6 +2,8 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+from sqlalchemy.orm import Session
+from src.infrastructure.db import engine
 from src.domains.authentication.exceptions.authentications_exceptions_http import (
     AuthenticationExceptionsHTTP,
 )
@@ -52,7 +54,7 @@ def get_user_if_authenticated(
 def login_user(inputs: InputsLoginUseCase) -> OutputsLoginUseCase:
 
     outputs = LoginUseCase(
-        user_repository=UserRepositoryORM(),
+        user_repository=UserRepositoryORM(Session(engine)),
         password_hasher=PasswordHasherBCrypt(),
         jwt_provider=PyJWTProvider(),
         authentication_exceptions=AuthenticationExceptionsHTTP(),

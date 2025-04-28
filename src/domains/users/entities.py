@@ -38,4 +38,3 @@ class UserEntity(UserData, AbstractEntity):
     def is_company(self) -> bool:
         return self.role == UserRole.COMPANY
 
-    pass

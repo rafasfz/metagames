@@ -1,7 +1,7 @@
 from typing import Annotated
 from uuid import UUID
 from fastapi import APIRouter, Depends, status
-from pytest import Session
+from sqlalchemy.orm import Session
 
 from src.infrastructure.db import engine
 from src.domains.authentication.routes import get_user_if_authenticated
@@ -23,6 +23,9 @@ from src.resources.providers.exceptions_provider.exceptions_provider_http import
 from src.resources.providers.password_hasher.password_hasher_bcrypt import (
     PasswordHasherBCrypt,
 )
+from src.resources.providers.repositories_provider.repositories_provider_orm import (
+    RepositoriesProviderORM,
+)
 
 users_router = APIRouter(
     prefix="/users",
@@ -37,7 +40,7 @@ def create_user(
 
     outputs = CreateUserUseCase(
         user=user,
-        user_repository=UserRepositoryORM(session=Session(engine)),
+        repositories_provider=RepositoriesProviderORM(),
         password_hasher=PasswordHasherBCrypt(),
         exceptions_provider=ExceptionsProviderHTTP(),
     ).execute(inputs=inputs)

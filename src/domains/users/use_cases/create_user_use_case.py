@@ -2,10 +2,11 @@ from dataclasses import dataclass
 from pydantic import BaseModel, Field
 
 from src.domains.users.entities import UserEntity, UserInputs, UserRole, UserToSave
-from src.domains.users.exceptions.user_exceptions import UserExceptions
-from src.domains.users.repositories.user_repository import UserRepository
 from src.resources.abstracts.use_case import AbstractUseCase
 from src.resources.providers.password_hasher.password_hasher import PasswordHasher
+from src.resources.providers.repositories_provider.repositories_provider import (
+    RepositoriesProvider,
+)
 
 
 class InputsCreateUserUseCase(BaseModel):
@@ -20,27 +21,8 @@ class OutputsCreateUserUseCase(BaseModel):
 class CreateUserUseCase(
     AbstractUseCase[InputsCreateUserUseCase, OutputsCreateUserUseCase]
 ):
-    user_repository: UserRepository
+    repositories_provider: RepositoriesProvider
     password_hasher: PasswordHasher
-
-    def _validate(self, inputs: InputsCreateUserUseCase) -> None:
-        is_user_email_already_exists = self.user_repository.get_user_by_email(
-            email=inputs.user.email
-        )
-
-        if is_user_email_already_exists:
-            raise self.exceptions_provider.user_exceptions.user_already_exists(
-                field="email"
-            )
-
-        is_username_already_exists = self.user_repository.get_user_by_username(
-            username=inputs.user.username
-        )
-
-        if is_username_already_exists:
-            raise self.exceptions_provider.user_exceptions.user_already_exists(
-                field="username"
-            )
 
     def _execute(self, inputs: InputsCreateUserUseCase) -> OutputsCreateUserUseCase:
         self._validate(inputs)
@@ -55,6 +37,31 @@ class CreateUserUseCase(
         if not self.user or not self.user.is_admin():
             user_with_password_hash.role = UserRole.USER
 
-        user = self.user_repository.create_user(user_with_password_hash)
+        user = self.repositories_provider.user_repository.create_user(
+            user_with_password_hash
+        )
 
         return OutputsCreateUserUseCase(user=user)
+
+    def _validate(self, inputs: InputsCreateUserUseCase) -> None:
+        is_user_email_already_exists = (
+            self.repositories_provider.user_repository.get_user_by_email(
+                email=inputs.user.email
+            )
+        )
+
+        if is_user_email_already_exists:
+            raise self.exceptions_provider.user_exceptions.user_already_exists(
+                field="email"
+            )
+
+        is_username_already_exists = (
+            self.repositories_provider.user_repository.get_user_by_username(
+                username=inputs.user.username
+            )
+        )
+
+        if is_username_already_exists:
+            raise self.exceptions_provider.user_exceptions.user_already_exists(
+                field="username"
+            )
