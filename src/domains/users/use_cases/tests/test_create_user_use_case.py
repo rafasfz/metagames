@@ -17,6 +17,9 @@ from src.resources.providers.exceptions_provider.exceptions_provider_http import
 from src.resources.providers.password_hasher.password_hasher_bcrypt import (
     PasswordHasherBCrypt,
 )
+from src.resources.providers.repositories_provider.repositories_provider_http import (
+    RepositoriesProviderORM,
+)
 
 
 @pytest.fixture
@@ -28,7 +31,16 @@ def engine(alembic_engine: Engine) -> Generator[Engine, None, None]:
     alembic_engine.dispose()
 
 
-def test_create_user_use_case(engine: Engine):
+@pytest.fixture
+def repositories_provider_orm(engine) -> RepositoriesProviderORM:
+    return RepositoriesProviderORM(
+        user_respository=UserRepositoryORM(session=Session(engine)),
+    )
+
+
+def test_create_user_use_case(
+    engine: Engine, repositories_provider_orm: RepositoriesProviderORM
+):
     user_inputs = UserInputs(
         email="john@doe.com",
         username="jonhndoe",
@@ -47,4 +59,15 @@ def test_create_user_use_case(engine: Engine):
         exceptions_provider=ExceptionsProviderHTTP(),
     ).execute(inputs=inputs)
 
-    assert outputs.user.id is not None
+    created_user = repositories_provider_orm.user_respository.get_user_by_id(
+        id=outputs.user.id,
+    )
+
+    assert outputs.user is not None
+    assert created_user is not None
+
+    assert created_user.id == outputs.user.id
+    assert created_user.email == user_inputs.email
+    assert created_user.username == user_inputs.username
+    assert created_user.first_name == user_inputs.first_name
+    assert created_user.last_name == user_inputs.last_name

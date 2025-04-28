@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from uuid import UUID
 from sqlalchemy.orm import Session
 from src.domains.users.entities import UserEntity, UserToSave
 from src.domains.users.repositories.user_repository import UserRepository
@@ -41,7 +42,7 @@ class UserRepositoryORM(UserRepository):
 
         return user_entity
 
-    def get_user_by_id(self, id: str) -> UserEntity | None:
+    def get_user_by_id(self, id: UUID) -> UserEntity | None:
         user_model = self.session.query(UserModel).filter_by(id=id).first()
 
         if not user_model:
