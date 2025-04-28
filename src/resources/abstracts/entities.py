@@ -12,9 +12,6 @@ class AbstractEntity(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
 
-    class Config:
-        validate_assignment = True
-
 
 def transform_model_to_entity(
     model: DeclarativeMeta, entity: type[TypeEntity]

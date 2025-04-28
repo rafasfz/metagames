@@ -14,9 +14,7 @@ class PlatformModel(AbstractModel):
     __tablename__ = "platforms"
 
     name: Mapped[str] = mapped_column("name", nullable=False, unique=True)
-    games: Mapped[list["GameModel"]] = relationship(
-        "GameModel", back_populates="platforms"
-    )
+    games: Mapped[list["GameModel"]] = relationship(secondary=association_table)
 
 
 class GameModel(AbstractModel):
@@ -24,6 +22,4 @@ class GameModel(AbstractModel):
 
     name: Mapped[str] = mapped_column("name", nullable=False, unique=True)
     description: Mapped[str] = mapped_column("description", nullable=False)
-    platforms: Mapped[list["PlatformModel"]] = relationship(
-        "PlatformModel", back_populates="games"
-    )
+    platforms: Mapped[list["PlatformModel"]] = relationship(secondary=association_table)

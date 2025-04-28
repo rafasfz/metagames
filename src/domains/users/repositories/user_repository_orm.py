@@ -1,17 +1,14 @@
 from dataclasses import dataclass
 from sqlalchemy.orm import Session
-from src.infrastructure.db import engine
 from src.domains.users.entities import UserEntity, UserToSave
 from src.domains.users.repositories.user_repository import UserRepository
 from src.domains.users.models import UserModel
 from src.resources.abstracts.entities import transform_model_to_entity
 
 
+@dataclass
 class UserRepositoryORM(UserRepository):
     session: Session
-
-    def __init__(self):
-        self.session = Session(engine)
 
     def create_user(self, user: UserToSave) -> UserEntity:
         user_model = UserModel(**user.model_dump())
