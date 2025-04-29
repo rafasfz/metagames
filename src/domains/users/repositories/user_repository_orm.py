@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 from src.domains.users.entities import UserEntity, UserToSave
 from src.domains.users.repositories.user_repository import UserRepository
 from src.domains.users.models import UserModel
-from src.resources.abstracts.entities import transform_model_to_entity
 
 
 @dataclass
@@ -18,7 +17,7 @@ class UserRepositoryORM(UserRepository):
         self.session.commit()
         self.session.refresh(user_model)
 
-        user_entity = transform_model_to_entity(user_model, UserEntity)
+        user_entity = UserEntity.transform_model_to_entity(user_model)
 
         return user_entity
 
@@ -28,7 +27,7 @@ class UserRepositoryORM(UserRepository):
         if not user_model:
             return None
 
-        user_entity = transform_model_to_entity(user_model, UserEntity)
+        user_entity = UserEntity.transform_model_to_entity(user_model)
 
         return user_entity
 
@@ -38,7 +37,7 @@ class UserRepositoryORM(UserRepository):
         if not user_model:
             return None
 
-        user_entity = transform_model_to_entity(user_model, UserEntity)
+        user_entity = UserEntity.transform_model_to_entity(user_model)
 
         return user_entity
 
@@ -48,7 +47,7 @@ class UserRepositoryORM(UserRepository):
         if not user_model:
             return None
 
-        user_entity = transform_model_to_entity(user_model, UserEntity)
+        user_entity = UserEntity.transform_model_to_entity(user_model)
 
         return user_entity
 

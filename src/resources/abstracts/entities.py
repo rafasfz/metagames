@@ -12,13 +12,14 @@ class AbstractEntity(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
 
-
-def transform_model_to_entity(
-    model: DeclarativeMeta, entity: type[TypeEntity]
-) -> TypeEntity:
-    entity_dict = {
-        key: getattr(model, key)
-        for key in entity.model_fields.keys()
-        if hasattr(model, key)
-    }
-    return entity(**entity_dict)
+    @classmethod
+    def transform_model_to_entity(
+        cls: type[TypeEntity],
+        model: DeclarativeMeta,
+    ) -> TypeEntity:
+        entity_dict = {
+            key: getattr(model, key)
+            for key in cls.model_fields.keys()
+            if hasattr(model, key)
+        }
+        return cls(**entity_dict)
