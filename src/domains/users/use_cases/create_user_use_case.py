@@ -34,7 +34,7 @@ class CreateUserUseCase(
             password_hash=password_hash,
         )
 
-        if not self.user or not self.user.is_admin():
+        if not self.authenticated_user or not self.authenticated_user.is_admin():
             user_with_password_hash.role = UserRole.USER
 
         user = self.repositories_provider.user_repository.create_user(

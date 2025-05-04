@@ -37,7 +37,7 @@ def create_user(
 ) -> OutputsCreateUserUseCase:
 
     outputs = CreateUserUseCase(
-        user=user,
+        authenticated_user=user,
         repositories_provider=RepositoriesProviderORM(),
         password_hasher=PasswordHasherBCrypt(),
         exceptions_provider=ExceptionsProviderHTTP(),

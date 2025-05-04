@@ -18,9 +18,15 @@ from src.domains.authentication.use_cases.login_use_case import (
 )
 from src.domains.users.entities import UserEntity
 from src.domains.users.repositories.user_repository_orm import UserRepositoryORM
+from src.resources.providers.exceptions_provider.exceptions_provider_http import (
+    ExceptionsProviderHTTP,
+)
 from src.resources.providers.jwt_provider.py_jwt_provider import PyJWTProvider
 from src.resources.providers.password_hasher.password_hasher_bcrypt import (
     PasswordHasherBCrypt,
+)
+from src.resources.providers.repositories_provider.repositories_provider_orm import (
+    RepositoriesProviderORM,
 )
 
 authentication_router = APIRouter(
@@ -54,10 +60,10 @@ def get_user_if_authenticated(
 def login_user(inputs: InputsLoginUseCase) -> OutputsLoginUseCase:
 
     outputs = LoginUseCase(
-        user_repository=UserRepositoryORM(Session(engine)),
         password_hasher=PasswordHasherBCrypt(),
         jwt_provider=PyJWTProvider(),
-        authentication_exceptions=AuthenticationExceptionsHTTP(),
+        repositories_provider=RepositoriesProviderORM(),
+        exceptions_provider=ExceptionsProviderHTTP(),
     ).execute(inputs=inputs)
 
     return outputs

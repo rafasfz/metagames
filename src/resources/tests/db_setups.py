@@ -19,7 +19,7 @@ def engine(alembic_engine: Engine) -> Generator[Engine, None, None]:
 
 
 @pytest.fixture
-def repositories_provider_orm(engine) -> RepositoriesProviderORM:
+def repositories_provider_orm(engine: Engine) -> RepositoriesProviderORM:
     return RepositoriesProviderORM(
         user_repository=UserRepositoryORM(session=Session(engine)),
     )

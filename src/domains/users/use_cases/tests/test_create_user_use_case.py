@@ -56,11 +56,7 @@ def test_create_user_use_case(
     assert outputs.user is not None
     assert created_user is not None
 
-    assert created_user.id == outputs.user.id
-    assert created_user.email == user_inputs.email
-    assert created_user.username == user_inputs.username
-    assert created_user.first_name == user_inputs.first_name
-    assert created_user.last_name == user_inputs.last_name
+    assert outputs.user == created_user
 
 
 def test_error_create_user_use_case_with_existing_email(
@@ -122,7 +118,7 @@ def test_create_admin_user_with_not_admin_user(
         repositories_provider=repositories_provider_orm,
         password_hasher=PasswordHasherBCrypt(),
         exceptions_provider=ExceptionsProviderHTTP(),
-        user=user_common,
+        authenticated_user=user_common,
     ).execute(inputs=inputs)
 
     assert outputs.user.role == UserRole.USER
@@ -150,7 +146,7 @@ def test_create_admin_user_with_admin_user(
         repositories_provider=repositories_provider_orm,
         password_hasher=PasswordHasherBCrypt(),
         exceptions_provider=ExceptionsProviderHTTP(),
-        user=user_admin,
+        authenticated_user=user_admin,
     ).execute(inputs=inputs)
 
     assert outputs.user.role == UserRole.ADMIN
@@ -178,7 +174,7 @@ def test_create_company_user_with_admin_user(
         repositories_provider=repositories_provider_orm,
         password_hasher=PasswordHasherBCrypt(),
         exceptions_provider=ExceptionsProviderHTTP(),
-        user=user_admin,
+        authenticated_user=user_admin,
     ).execute(inputs=inputs)
 
     assert outputs.user.role == UserRole.COMPANY

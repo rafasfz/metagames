@@ -16,21 +16,21 @@ OutputsUseCase = TypeVar("OutputsUseCase")
 class AbstractUseCase(Generic[InputsUseCase, OutputsUseCase]):
     exceptions_provider: ExceptionsProvider
 
-    user: UserEntity | None = None
+    authenticated_user: UserEntity | None = None
     is_nedded_authentication: bool = False
     is_nedded_be_admin: bool = False
     is_nedded_be_enterprise: bool = False
 
     def execute(self, inputs: InputsUseCase) -> OutputsUseCase:
-        if self.is_nedded_authentication and not self.user:
+        if self.is_nedded_authentication and not self.authenticated_user:
             raise self.exceptions_provider.authentication_exceptions.unauthorized()
 
-        self.user = cast(UserEntity, self.user)
+        self.authenticated_user = cast(UserEntity, self.authenticated_user)
 
-        if self.is_nedded_be_admin and not self.user.is_admin():
+        if self.is_nedded_be_admin and not self.authenticated_user.is_admin():
             raise self.exceptions_provider.authentication_exceptions.forbidden()
 
-        if self.is_nedded_be_enterprise and not self.user.is_company():
+        if self.is_nedded_be_enterprise and not self.authenticated_user.is_company():
             raise self.exceptions_provider.authentication_exceptions.forbidden()
 
         outputs = self._execute(inputs)
