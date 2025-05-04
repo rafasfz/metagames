@@ -36,7 +36,7 @@ def login_user(
 
         outputs = LoginUseCase(
             repositories_provider=repositories_provider_orm,
-            jwt_provider=PyJWTProvider(),  # Pode ser mockado se necessário
+            jwt_provider=PyJWTProvider(),
             password_hasher=PasswordHasherBCrypt(),
             exceptions_provider=ExceptionsProviderHTTP(),
         ).execute(inputs=inputs)
@@ -78,7 +78,7 @@ def test_login_successful(
 
 
 def test_login_invalid_username(
-    repositories_provider_orm: RepositoriesProviderORM,
+    login_user: Callable[[UserLoginInputs], OutputsLoginUseCase],
 ):
     login_inputs = UserLoginInputs(
         username=INVALID_USERNAME,
@@ -86,19 +86,13 @@ def test_login_invalid_username(
     )
 
     with pytest.raises(HTTPException) as http_exception:
-        LoginUseCase(
-            repositories_provider=repositories_provider_orm,
-            jwt_provider=PyJWTProvider(),
-            password_hasher=PasswordHasherBCrypt(),
-            exceptions_provider=ExceptionsProviderHTTP(),
-        ).execute(InputsLoginUseCase(user=login_inputs))
+        login_user(login_inputs)
 
     assert http_exception.value.status_code == 401
 
 
 def test_login_invalid_password(
     registred_user: UserEntity,
-    user_inputs: UserInputs,
     login_user: Callable[[UserLoginInputs], OutputsLoginUseCase],
 ):
     login_inputs = UserLoginInputs(
