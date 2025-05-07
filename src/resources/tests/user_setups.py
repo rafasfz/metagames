@@ -1,6 +1,10 @@
 import pytest
 
 from src.domains.users.entities import UserEntity, UserInputs, UserRole
+from src.domains.users.use_cases.create_user_use_case import (
+    CreateUserUseCase,
+    InputsCreateUserUseCase,
+)
 
 
 @pytest.fixture
@@ -34,3 +38,19 @@ def user_admin() -> UserEntity:
         last_name="Admin",
         role=UserRole.ADMIN,
     )
+
+
+@pytest.fixture
+def registred_user(
+    user_inputs: UserInputs,
+    create_user_use_case: CreateUserUseCase,
+) -> UserEntity:
+    inputs = InputsCreateUserUseCase(
+        user=user_inputs,
+    )
+
+    outputs = create_user_use_case.execute(
+        inputs=inputs,
+    )
+
+    return outputs.user

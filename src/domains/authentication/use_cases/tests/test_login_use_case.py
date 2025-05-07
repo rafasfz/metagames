@@ -27,40 +27,6 @@ INVALID_USERNAME = "usuario_inexistente"
 INVALID_PASSWORD = "qualquer_senha"
 
 
-@pytest.fixture
-def login_user(
-    repositories_provider_orm: RepositoriesProviderORM,
-) -> Callable[[UserLoginInputs], OutputsLoginUseCase]:
-    def _login_user(user_inputs: UserLoginInputs) -> OutputsLoginUseCase:
-        inputs = InputsLoginUseCase(user=user_inputs)
-
-        outputs = LoginUseCase(
-            repositories_provider=repositories_provider_orm,
-            jwt_provider=PyJWTProvider(),
-            password_hasher=PasswordHasherBCrypt(),
-            exceptions_provider=ExceptionsProviderHTTP(),
-        ).execute(inputs=inputs)
-        return outputs
-
-    return _login_user
-
-
-@pytest.fixture
-def registred_user(
-    user_inputs: UserInputs,
-    create_user_use_case: CreateUserUseCase,
-) -> UserEntity:
-    inputs = InputsCreateUserUseCase(
-        user=user_inputs,
-    )
-
-    outputs = create_user_use_case.execute(
-        inputs=inputs,
-    )
-
-    return outputs.user
-
-
 def test_login_successful(
     registred_user: UserEntity,
     user_inputs: UserInputs,
