@@ -10,12 +10,21 @@ from sqlalchemy.orm import Session
 
 
 @pytest.fixture
-def engine(alembic_engine: Engine) -> Generator[Engine, None, None]:
-    Base.metadata.create_all(alembic_engine)
+def in_memory_db() -> Generator[Engine, None, None]:
+    from sqlalchemy import create_engine
 
-    yield alembic_engine
+    engine = create_engine("sqlite:///:memory:", echo=True)
+    yield engine
+    engine.dispose()
 
-    alembic_engine.dispose()
+
+@pytest.fixture
+def engine(in_memory_db: Engine) -> Generator[Engine, None, None]:
+    Base.metadata.create_all(in_memory_db)
+
+    yield in_memory_db
+
+    in_memory_db.dispose()
 
 
 @pytest.fixture

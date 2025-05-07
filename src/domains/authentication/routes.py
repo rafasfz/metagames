@@ -2,11 +2,6 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from sqlalchemy.orm import Session
-from src.infrastructure.db import engine
-from src.domains.authentication.exceptions.authentications_exceptions_http import (
-    AuthenticationExceptionsHTTP,
-)
 from src.domains.authentication.use_cases.get_user_if_authenticated_use_case import (
     GetUserIfAuthenticatedUseCase,
     InputsGetUserIfAuthenticatedUseCase,
