@@ -10,6 +10,8 @@ from src.domains.authentication.use_cases.login_use_case import (
     OutputsLoginUseCase,
     UserLoginInputs,
 )
+from src.domains.games.use_cases.create_platform_use_case import CreatePlatformUseCase
+from src.domains.users.entities import UserEntity
 from src.domains.users.use_cases.create_user_use_case import CreateUserUseCase
 from src.resources.providers.exceptions_provider.exceptions_provider_http import (
     ExceptionsProviderHTTP,
@@ -69,3 +71,16 @@ def login_user(
 @pytest.fixture
 def get_user_if_authenticated_use_case() -> GetUserIfAuthenticatedUseCase:
     return GetUserIfAuthenticatedUseCase(jwt_provider=PyJWTProvider())
+
+
+@pytest.fixture
+def create_platform_use_case(
+    user_admin: UserEntity,
+    repositories_provider_orm: RepositoriesProviderORM,
+):
+    return CreatePlatformUseCase(
+        is_nedded_be_admin=True,
+        exceptions_provider=ExceptionsProviderHTTP(),
+        authenticated_user=user_admin,
+        repositories_provider_orm=repositories_provider_orm,
+    )

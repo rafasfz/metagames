@@ -8,10 +8,6 @@ from src.domains.authentication.use_cases.login_use_case import (
     UserLoginInputs,
     OutputsLoginUseCase,
 )
-from src.domains.users.use_cases.create_user_use_case import (
-    CreateUserUseCase,
-    InputsCreateUserUseCase,
-)
 from src.resources.providers.exceptions_provider.exceptions_provider_http import (
     ExceptionsProviderHTTP,
 )

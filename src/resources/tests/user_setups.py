@@ -19,6 +19,18 @@ def user_inputs() -> UserInputs:
 
 
 @pytest.fixture
+def user_inputs_admin() -> UserInputs:
+    return UserInputs(
+        email="john@admin.com",
+        username="jonhndoe_admin",
+        password="password123",
+        first_name="John",
+        last_name="Doe",
+        role=UserRole.ADMIN,
+    )
+
+
+@pytest.fixture
 def user_common() -> UserEntity:
     return UserEntity(
         email="user@common.com",
