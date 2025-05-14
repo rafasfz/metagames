@@ -22,7 +22,11 @@ class AbstractUseCase(Generic[InputsUseCase, OutputsUseCase]):
     is_nedded_be_enterprise: bool = False
 
     def execute(self, inputs: InputsUseCase) -> OutputsUseCase:
-        if self.is_nedded_authentication and not self.authenticated_user:
+        if (
+            self.is_nedded_authentication
+            or self.is_nedded_be_admin
+            or self.is_nedded_be_enterprise
+        ) and not self.authenticated_user:
             raise self.exceptions_provider.authentication_exceptions.unauthorized()
 
         self.authenticated_user = cast(UserEntity, self.authenticated_user)

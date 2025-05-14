@@ -21,7 +21,7 @@ class UserData(BaseModel):
 
 
 class UserInputs(UserData):
-    password: str = Field(min_length=8, max_length=128)
+    password: str = Field(min_length=6, max_length=128)
 
 
 class UserToSave(UserData):
@@ -37,4 +37,3 @@ class UserEntity(UserData, AbstractEntity):
 
     def is_company(self) -> bool:
         return self.role == UserRole.COMPANY
-
