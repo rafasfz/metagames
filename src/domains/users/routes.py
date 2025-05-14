@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends, status
 
 from src.domains.authentication.routes import get_user_if_authenticated
 from src.domains.users.entities import UserEntity
-from src.domains.users.repositories.user_repository_orm import UserRepositoryORM
 from src.domains.users.use_cases.create_user_use_case import (
     CreateUserUseCase,
     InputsCreateUserUseCase,

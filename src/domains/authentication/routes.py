@@ -25,7 +25,7 @@ from src.resources.providers.repositories_provider.repositories_provider_orm imp
 )
 
 authentication_router = APIRouter(
-    prefix="/authentication",
+    prefix="/sessions",
 )
 
 auth_scheme = HTTPBearer(auto_error=False)
