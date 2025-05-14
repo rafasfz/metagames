@@ -16,12 +16,12 @@ from src.resources.providers.repositories_provider.repositories_provider_orm imp
 )
 
 
-users_router = APIRouter(
-    prefix="/platform",
+games_router = APIRouter(
+    prefix="/games",
 )
 
 
-@users_router.post("/", status_code=status.HTTP_201_CREATED)
+@games_router.post("/platforms", status_code=status.HTTP_201_CREATED)
 def create_platform(
     inputs: InputsCreatePlatformUseCase,
     user: Annotated[UserEntity | None, Depends(get_user_if_authenticated)],

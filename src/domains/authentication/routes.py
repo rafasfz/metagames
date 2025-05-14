@@ -24,7 +24,7 @@ from src.resources.providers.repositories_provider.repositories_provider_orm imp
     RepositoriesProviderORM,
 )
 
-authentication_router = APIRouter(
+sessions_router = APIRouter(
     prefix="/sessions",
 )
 
@@ -51,7 +51,7 @@ def get_user_if_authenticated(
     return user
 
 
-@authentication_router.post("/", status_code=status.HTTP_200_OK)
+@sessions_router.post("/", status_code=status.HTTP_200_OK)
 def login_user(inputs: InputsLoginUseCase) -> OutputsLoginUseCase:
 
     outputs = LoginUseCase(
